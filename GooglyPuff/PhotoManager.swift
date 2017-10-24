@@ -34,11 +34,23 @@ let lotsOfFacesURLString = "http://i.imgur.com/tPzTg7A.jpg"
 
 typealias PhotoProcessingProgressClosure = (_ completionPercentage: CGFloat) -> Void
 typealias BatchPhotoDownloadingCompletionClosure = (_ error: NSError?) -> Void
-
+/*
+     Singleton
+     Not thread safe: singletons are often used from multiple controllers accessing the singleton instance at the same time.
+                     can only be run in one context at a time
+     When cause thread unsafe:
+         1. During initialization of the singleton instance (solved below by using two variable _sharedManager and sharedManager)
+         2. During reads and writes to the instance.
+*/
+// To avoid the initialization be called concurrentelly(from two threads at once)
+// _sharedManager is used to imitializ PhotoManager lazily. this happen only at the first access
 private let _sharedManager = PhotoManager()
 
 class PhotoManager {
+    // Public variable below returns the private _sharedManager variable to ensure that this operation is thread safe.
   class var sharedManager: PhotoManager {
+    // _sharedManager is used to imitializ PhotoManager lazily. this happen only at the first access
+    // From here
     return _sharedManager
   }
   
