@@ -97,6 +97,7 @@ private extension PhotoCollectionViewController {
   func showOrHideNavPrompt() {
     // Use DispatchQueue to delay task execuation
     let delayInSecond = 1.0
+    // Wait for specified time then asynchronously run the block below
     DispatchQueue.main.asyncAfter(deadline: .now() + delayInSecond) {
         let count = PhotoManager.sharedManager.photos.count
         if count > 0 {
