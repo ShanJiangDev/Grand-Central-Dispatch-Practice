@@ -42,9 +42,23 @@ class PhotoDetailViewController: UIViewController {
       image.size.width <= photoImageView.bounds.size.width {
       photoImageView.contentMode = .center
     }
-    
+    /*
+    // Without using GCD
     let overlayImage = faceOverlayImageFromImage(image)
     fadeInNewImage(overlayImage)
+    */
+    
+    // Using GCD
+    // Use async call when you need to perform a network-based or CPU intensive task in the background and not block the current thread.
+    DispatchQueue.global(qos: .userInitiated).async {
+        // 1. Move the face detection function into a background global queue and run the work in this closure asynchronously.
+        let overlayImage = self.faceOverlayImageFromImage(self.image)
+        DispatchQueue.main.async {
+            // 2. Step 1 is finished and got the generated new image. Now we use the new image to update the UIImageView.
+            // Always access UIKit classes on the main thread.
+            self.fadeInNewImage(overlayImage)
+        }
+    }
   }
 
 }
