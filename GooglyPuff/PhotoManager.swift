@@ -55,10 +55,17 @@ class PhotoManager {
   }
   
   fileprivate var _photos: [Photo] = []
+    // below -- read method -- modify array object
   var photos: [Photo] {
+    // return a copy of the photos array -> passing by value results in a copy of the object and changes to the copy will not affect the original.
+    // By default swift class instance are passed by reference and structs passed by value. Swift's built-in data types like Array and Dictionary, are implemented as structs
+    
+    // But this will not protect against one thread calling the write method while siultaneously another thread calls this read method
     return _photos
   }
   
+    // It is not safe to let one thread modify the array while another is reading it.
+    // below -- write method -- modify array object
   func addPhoto(_ photo: Photo) {
     _photos.append(photo)
     DispatchQueue.main.async {
